@@ -3,8 +3,8 @@
 Proyecto Flutter de la App movil MedicalSys.
 
 # Instrucciones
-Se requiere tener instalado flutter v1.5 o superior.
-Para poder desplegar la app se necesita un emulador o dispositivo fisico
+ -Se requiere tener instalado flutter v1.5 o superior.
+ -Para poder desplegar la app se necesita un emulador o dispositivo fisico
 
 
 ## Getting Started
