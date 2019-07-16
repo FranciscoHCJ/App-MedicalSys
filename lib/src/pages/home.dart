@@ -72,7 +72,7 @@ class HomePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'Categorias',
+                      'Buscar por categorias',
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 20,
@@ -81,23 +81,18 @@ class HomePage extends StatelessWidget {
                     ),
                     SizedBox(height: 5),
                     Expanded(
-                      child: ListView(
-                        padding: const EdgeInsets.only(right: 20),
-                        scrollDirection: Axis.horizontal,
-                        children: List.generate(1, (_) {
-                          return Column(
+                      child: Column(
+                        children: <Widget>[
+                          Row(
                             children: <Widget>[
-                              buildRoutinesItem(media, 'Médicos', 'Consulta nuestra lista de médicos', icon: Icons.person),
-                              SizedBox(height: 5),
-                              buildRoutinesItem(media, 'Hospitales', 'Consulta nuestra lista de hospitales', icon: Icons.local_hospital),
-                              SizedBox(height: 5),
-                              buildRoutinesItem(media, 'Clinicas', 'Consulta nuestra lista de clinicas', icon: Icons.local_convenience_store),
-                              SizedBox(height: 5),
-                              buildRoutinesItem(media, 'Farmacias', 'Consulta nuestra lista de farmacias' , icon: Icons.local_pharmacy),
+                              iconsCategory(context, media, "Médicos", icon: Icons.person),
+                              iconsCategory(context, media, "Hospitales", icon: Icons.local_hospital),
+                              iconsCategory(context, media, "Clinicas", icon: Icons.local_convenience_store),
+                              iconsCategory(context, media, "Farmacias", icon: Icons.local_pharmacy),
                             ],
-                          );
-                        }),
-                      ),
+                          )
+                        ],
+                      )
                     )
                   ],
                 ),
