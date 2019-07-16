@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:medical_sys/src/models/hospital.dart';
 import 'dart:convert';
-
+import 'dart:async';
 import 'package:medical_sys/src/widgets/bottomBar.dart';
+import 'package:medical_sys/src/widgets/lista.dart';
+
 
 class ListaPage extends StatefulWidget {
 
@@ -15,16 +18,31 @@ class _ListaDatosState extends State<ListaPage> with SingleTickerProviderStateMi
 
   AnimationController _controller;
 
-  Map datos;
-  List hospitales;
+  // Map datos;
+  Future<List<Hospital>> hospitales;
+  // List<Hospital> hospitales;
 
-  getHospitales() async {
-    http.Response response = await http.get('https://medicalsysapp.herokuapp.com/hospital/todas');
-    datos = json.decode(response.body);
-    setState(() {
-     hospitales = datos['hospitales']; 
-    });
+  Future<List<Hospital>> getHospitales() async {
+    final response = await http.get('https://medicalsysapp.herokuapp.com/hospital/todas');
+
+    if (response.statusCode == 200) {
+      // Si el servidor devuelve una repuesta OK, parseamos el JSON
+      final decodedData = json.decode(response.body);
+      final hospitaless = new Hospitales.fromJsonList(decodedData['hospitales']);
+      return hospitaless.items;
+    } else {
+    // Si esta respuesta no fue OK, lanza un error.
+    throw Exception('Failed to load hospital');
+    }
   }
+
+  // getHospitales() async {
+  //   http.Response response = await http.get('https://medicalsysapp.herokuapp.com/hospital/todas');
+  //   datos = json.decode(response.body);
+  //   setState(() {
+  //    hospitales = datos['hospitales']; 
+  //   });
+  // }
 
   @override
   void initState() {
@@ -33,7 +51,7 @@ class _ListaDatosState extends State<ListaPage> with SingleTickerProviderStateMi
       vsync: this,
       duration: Duration(seconds: 2),
     );
-    getHospitales();
+    hospitales = getHospitales();
     _controller.forward();
   }
 
@@ -59,39 +77,16 @@ class _ListaDatosState extends State<ListaPage> with SingleTickerProviderStateMi
           ).animate(
             _controller
           ),
-          child: ListView.builder(
-            itemCount: hospitales == null ? 0 : hospitales.length,
-            itemBuilder: (BuildContext context, int index) {
-              return GestureDetector(
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: CircleAvatar(
-                            backgroundImage: NetworkImage(hospitales[index]['imageUrl']),
-                          )
-                        ),
-                        Text(
-                            hospitales[index]['nombre'],
-                            style: TextStyle(
-                              fontSize: 10.0,
-                              color: Colors.blueAccent[200],
-                              fontWeight: FontWeight.w500
-                            ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                onTap: (){
-                  Navigator.pushNamed(context, 'detalle', arguments: hospitales);
-                },
-              );
+          child: FutureBuilder(
+            future: hospitales,
+            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+              if (snapshot.hasData) {
+                return ListaDatos(hospitales: snapshot.data);
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
             },
-          ),
+          )
         ),
         bottomNavigationBar: footer(),
     );

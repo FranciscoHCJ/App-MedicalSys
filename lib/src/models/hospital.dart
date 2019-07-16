@@ -1,33 +1,46 @@
+class Hospitales {
+
+  List<Hospital> items = new List();
+
+  Hospitales();
+
+  Hospitales.fromJsonList( List<dynamic> jsonList ) {
+    
+    if (jsonList == null) return;
+
+    for (var item in jsonList ) {
+      final hospital = new Hospital.fromJsonMap(item);
+      items.add( hospital );
+    }
+  
+  }
+  
+}
+
 class Hospital {
-  final String id;
-  final List<String> especialidad;
-  final String tipo;
-  final String nombre;
-  final String direccion;
-  final String telefono;
-  final String imageUrl;
-  final String img;
+   String id;
+   String nombre;
+   String direccion;
+   String telefono;
+   String imageUrl;
 
-  Hospital({this.id, this.especialidad, this.tipo, this.nombre, this.direccion, this.telefono, this.imageUrl, this.img});
+  Hospital({this.id,  this.nombre, this.direccion, this.telefono, this.imageUrl});
 
-  factory Hospital.fromJson(Map<String, dynamic> json) {
-    return Hospital(
-      id           : json['_id'],
-      especialidad : json['especialidad'],
-      tipo         : json['tipo'],
-      nombre       : json['nombre'],
-      direccion    : json['direccion'],
-      telefono     : json['telefono'],
-      imageUrl     : json['imageUrl']
-    );
+   Hospital.fromJsonMap(Map<String, dynamic> json) {
+    
+      id        = json['_id'];
+      nombre    = json['nombre'];
+      direccion = json['direccion'];
+      telefono  = json['telefono'];
+      imageUrl  = json['imageUrl'];
   }
 
-  getPosterImg(){
+  getImagen(){
 
     if ( imageUrl == null ) {
       return 'https://cdn.samsung.com/etc/designs/smg/global/imgs/support/cont/NO_IMG_600x600.png';
     } else {
-      return 'http://192.168.1.69:3000/imageUrl/hospital/$imageUrl';
+      return 'https://medicalsysapp.herokuapp.com/imageUrl/hospital/$imageUrl';
     }
 
   }
